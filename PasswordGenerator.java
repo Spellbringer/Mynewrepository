@@ -20,13 +20,23 @@ public class PasswordGenerator {
     }
 
     public static void lengthInputIDE() throws IOException {
-        System.out.println("Введите длину пароля:");
-        passwordGeneration(Integer.parseInt(reader.readLine()));
+        System.out.println("Enter password length:");
+        try {
+            passwordGeneration(Integer.parseInt(reader.readLine()));
+        } catch (NumberFormatException numberFormatException) {
+            System.out.println("Not a number. Repeat input.");
+            lengthInputIDE();
+        }
     }
 
     public static void lengthInputConsole() throws IOException {
-        System.out.println("Введите длину пароля:");
-        passwordGeneration(Integer.parseInt(console.readLine()));
+        System.out.println("Enter password length:");
+        try {
+            passwordGeneration(Integer.parseInt(console.readLine()));
+        } catch (NumberFormatException numberFormatException) {
+            System.out.println("Not a number. Repeat input.");
+            lengthInputConsole();
+        }
     }
 
     public static void passwordGeneration(int length) throws IOException {
@@ -39,40 +49,43 @@ public class PasswordGenerator {
                 passwordBuffer[i] = Character.toUpperCase(passwordBuffer[i]);
             }
         }
-        System.out.println("Ваш сгенерированный пароль: " + String.valueOf(passwordBuffer));
+        System.out.println("Your generated password: " + String.valueOf(passwordBuffer));
         repeatGeneration();
     }
 
     public static void repeatGeneration() throws IOException {
-        System.out.println("Повторить генерацию? \"Y\"/\"N\"");
+        System.out.println("Regenerate? \"Y\"/\"N\"");
         char entry;
-        if (isConsole) {
-            entry = Character.toLowerCase(console.readLine().charAt(0));
-            if (entry == 'y' || entry == 'н') {
-                System.out.println("Повторяем генерацию...");
-                lengthInputConsole();
+        try {
+            if (isConsole) {
+                entry = Character.toLowerCase(console.readLine().charAt(0));
+                if (entry == 'y' || entry == 'н') {
+                    System.out.println("Repeating generation...");
+                    lengthInputConsole();
+                } else if (entry == 'n' || entry == 'т') {
+                    System.out.println("Exiting the program...");
+                    System.exit(0);
+                } else {
+                    System.out.println("Input unclear, repeat...");
+                    repeatGeneration();
+                }
             }
-            else if (entry == 'n' || entry == 'т') {
-                System.out.println("Выходим из программы...");
-                System.exit(0);
-            } else {
-                System.out.println("Ввод неясен, повторяем...");
-                repeatGeneration();
+            if (!isConsole) {
+                    entry = Character.toLowerCase(reader.readLine().charAt(0));
+                    if (entry == 'y' || entry == 'н') {
+                        System.out.println("Repeating generation...");
+                        lengthInputIDE();
+                    } else if (entry == 'n' || entry == 'т') {
+                        System.out.println("Exiting the program...");
+                        System.exit(0);
+                    } else {
+                        System.out.println("Input unclear, repeat...");
+                        repeatGeneration();
+                    }
             }
-        }
-        if (!isConsole) {
-            entry = Character.toLowerCase(reader.readLine().charAt(0));
-            if (entry == 'y' || entry == 'н') {
-                System.out.println("Повторяем генерацию...");
-                lengthInputIDE();
-            }
-            else if (entry == 'n' || entry == 'т') {
-                System.out.println("Выходим из программы...");
-                System.exit(0);
-            } else {
-                System.out.println("Ввод неясен, повторяем...");
-                repeatGeneration();
-            }
+        } catch (StringIndexOutOfBoundsException e) {
+            System.out.println("Cannot be an empty field! Repeat input");
+            repeatGeneration();
         }
     }
 }
