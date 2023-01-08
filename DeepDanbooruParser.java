@@ -6,26 +6,13 @@ class DeepDanbooruParser {
     static String tags = "";
     static java.io.Console console = System.console();
     public static void main(String[] args) {
-        System.out.println("Enter your raw text below: ");
-       if (console != null) {
-           consoleInput();
-       }
-       else {
-           iDEInput();
-       }
-    }
-    public static void iDEInput() {
-        Scanner scanner = new Scanner(System.in);
-        while (scanner.hasNextLine()) {
-            String str = scanner.nextLine();
-            if (str.isBlank()) {
-                break;
-            }
-            String[] tokens = str.split(" ");
-            tags += tokens[0] + ", ";
-
+        if (console != null) {
+            System.out.println("Enter your raw text below: ");
+            consoleInput();
         }
-        System.out.println("Your parsed tags are: \n" + tags);
+        else {
+            System.out.println("Console unavailable!");
+        }
     }
     public static void consoleInput() {
         String nextScan = "null";
@@ -34,10 +21,22 @@ class DeepDanbooruParser {
             if (nextScan.isBlank()) {
                 break;
             }
-            String[] tokens = nextScan.split(" ");
-            tags += tokens[0] + ", ";
+            String[] tokens = nextScan.split("\n");
+            if (hasWhiteSpace(tokens[0])) {
+                tags += tokens[0].substring(0, tokens[0].length() - 6) + ", ";
+            } else {
+                tags += tokens[0].substring(0, tokens[0].length() - 5) + ", ";
+            }
 
         }
         System.out.println("Your parsed tags are: \n" + tags);
+    }
+    public static boolean hasWhiteSpace(String token) {
+        for (int i = 0; i < token.length(); i++) {
+            if (Character.isWhitespace(token.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 }
